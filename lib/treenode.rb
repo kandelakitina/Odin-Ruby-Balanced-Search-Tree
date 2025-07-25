@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Node class for out Binary Search Tree
-class Node
+class TreeNode
   include Comparable
 
   attr_accessor :left, :right, :value

@@ -1,4 +1,6 @@
-require_relative '../lib/binary-search-tree'
+# frozen_string_literal: true
+
+require_relative '../lib/binary_search_tree'
 
 RSpec.describe TreeNode do
   it 'has Comparable and compares by data' do
