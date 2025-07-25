@@ -2,10 +2,9 @@
 
 require_relative 'lib/binary_search_tree'
 
-mytree = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
-
+mytree = Tree.new([10, 5, 15, 3, 7, 12, 18])
 mytree.pretty_print
 
-mytree.delete(mytree.root, 23)
-
-mytree.pretty_print
+p mytree.preorder
+p mytree.inorder
+p mytree.postorder

@@ -87,9 +87,17 @@ RSpec.describe Tree do
     end
   end
 
-  describe '#inorder' do
-    it 'returns the elements in sorted order' do
+  describe 'traversals' do
+    it 'returns the elements in #preorder traversal' do
+      expect(tree.preorder).to eq([10, 5, 3, 7, 15, 12, 18])
+    end
+
+    it 'returns the elements in #inorder traversal' do
       expect(tree.inorder).to eq([3, 5, 7, 10, 12, 15, 18])
+    end
+
+    it 'returns the elements in #postorder traversal' do
+      expect(tree.postorder).to eq([3, 7, 5, 12, 18, 15, 10])
     end
   end
 end
