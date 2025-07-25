@@ -22,6 +22,32 @@ RSpec.describe Tree do
     expect(tree.balanced?).to be true
   end
 
+  describe '#build_tree' do
+    it 'builds a balanced BST from an unsorted array with duplicates' do
+      input = [10, 20, 10, 5, 15, 25, 5, 1, 30]
+      tree = Tree.new([])
+      tree.build_tree(input)
+
+      expected_output = input.uniq.sort
+      expect(tree.inorder).to eq(expected_output)
+      expect(tree.balanced?).to be true
+    end
+
+    it 'handles a single-element array' do
+      tree = Tree.new([])
+      tree.build_tree([42])
+      expect(tree.inorder).to eq([42])
+      expect(tree.balanced?).to be true
+    end
+
+    it 'handles an empty array' do
+      tree = Tree.new([])
+      tree.build_tree([])
+      expect(tree.root).to be_nil
+      expect(tree.inorder).to eq([])
+    end
+  end
+
   describe '#insert and #find' do
     it 'inserts a value and finds it' do
       tree.insert(100)
