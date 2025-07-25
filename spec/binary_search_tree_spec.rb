@@ -100,4 +100,26 @@ RSpec.describe Tree do
       expect(tree.postorder).to eq([3, 7, 5, 12, 18, 15, 10])
     end
   end
+
+  describe '#level_order' do
+    context 'when no block is given' do
+      it 'returns an array of values in level-order traversal' do
+        expect(tree.level_order).to eq([10, 5, 15, 3, 7, 12, 18])
+      end
+    end
+
+    context 'when a block is given' do
+      it 'yields each node in level-order' do
+        values = []
+        tree.level_order { |node| values << node.value }
+        expect(values).to eq([10, 5, 15, 3, 7, 12, 18])
+      end
+
+      it 'allows any operation on each node via block' do
+        sum = 0
+        tree.level_order { |node| sum += node.value }
+        expect(sum).to eq(array.sum)
+      end
+    end
+  end
 end
