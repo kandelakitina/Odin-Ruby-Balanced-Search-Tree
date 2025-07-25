@@ -34,6 +34,17 @@ class Tree
     node
   end
 
+  def find(node, target)
+    return nil if node.nil?
+    return node if node.value == target
+
+    if target < node.value
+      find(node.left, target)
+    else
+      find(node.right, target)
+    end
+  end
+
   def inorder(node = @root, result = [])
     return result if node.nil?
 
