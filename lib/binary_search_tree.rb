@@ -6,7 +6,7 @@ class Tree
   attr_accessor :root
 
   def initialize(array)
-    @root = build_tree(array)
+    @root = build_tree(array.uniq.sort)
   end
 
   def insert(node, value)
@@ -45,12 +45,31 @@ class Tree
     end
   end
 
+  # Traversal methods
   def inorder(node = @root, result = [])
     return result if node.nil?
 
     inorder(node.left, result)
     result << node.value
     inorder(node.right, result)
+    result
+  end
+
+  def preorder(node = @root, result = [])
+    return result if node.nil?
+
+    result << node.value
+    preorder(node.left, result)
+    preorder(node.right, result)
+    result
+  end
+
+  def postorder(node = @root, result = [])
+    return result if node.nil?
+
+    postorder(node.left, result)
+    postorder(node.right, result)
+    result << node.value
     result
   end
 
@@ -65,10 +84,12 @@ class Tree
   private
 
   def build_tree(array)
-    node = nil
-    array.each do |item|
-      node = insert(node, item)
-    end
+    return nil if array.empty?
+
+    mid = array.size / 2
+    node = TreeNode.new(array[mid])
+    node.left = build_tree(array[0...mid])
+    node.right = build_tree(array[(mid + 1)..])
     node
   end
 
