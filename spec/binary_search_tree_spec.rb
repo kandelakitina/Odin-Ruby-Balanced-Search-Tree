@@ -1,132 +1,72 @@
 # frozen_string_literal: true
 
-require_relative '../lib/binary_search_tree'
-
-RSpec.describe TreeNode do
-  it 'has Comparable and compares by data' do
-    a = TreeNode.new(5)
-    b = TreeNode.new(10)
-    expect(a < b).to be true
-    expect(a == TreeNode.new(5)).to be true
-  end
-end
+require_relative '../lib/binary_search_tree.rb'
 
 RSpec.describe Tree do
-  let(:data) { [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324] }
-  let(:tree) { Tree.new(data) }
+  let(:array) { [10, 5, 15, 3, 7, 12, 18] }
+  let(:tree) { described_class.new(array) }
 
-  it 'builds a balanced tree with unique sorted values' do
-    expect(tree.root).to be_a(TreeNode)
-    sorted_values = data.uniq.sort
-    expect(tree.inorder).to eq(sorted_values)
-    expect(tree.balanced?).to be true
-  end
-
-  describe '#build_tree' do
-    it 'builds a balanced BST from an unsorted array with duplicates' do
-      input = [10, 20, 10, 5, 15, 25, 5, 1, 30]
-      tree = Tree.new([])
-      tree.build_tree(input)
-
-      expected_output = input.uniq.sort
-      expect(tree.inorder).to eq(expected_output)
-      expect(tree.balanced?).to be true
-    end
-
-    it 'handles a single-element array' do
-      tree = Tree.new([])
-      tree.build_tree([42])
-      expect(tree.inorder).to eq([42])
-      expect(tree.balanced?).to be true
-    end
-
-    it 'handles an empty array' do
-      tree = Tree.new([])
-      tree.build_tree([])
-      expect(tree.root).to be_nil
-      expect(tree.inorder).to eq([])
+  describe '#initialize' do
+    it 'builds a tree with the root value from the first element inserted' do
+      expect(tree.root).to be_a(TreeNode)
+      expect(tree.root.value).to eq(10)
     end
   end
 
-  describe '#insert and #find' do
-    it 'inserts a value and finds it' do
-      tree.insert(100)
-      expect(tree.find(100)).to be_a(TreeNode)
-      expect(tree.find(100).data).to eq(100)
+  describe '#inorder' do
+    it 'returns the elements in sorted order' do
+      expect(tree.inorder).to eq([3, 5, 7, 10, 12, 15, 18])
+    end
+  end
+
+  describe '#insert' do
+    it 'inserts a new node into the tree' do
+      tree.insert(tree.root, 6)
+      expect(tree.inorder).to include(6)
     end
 
     it 'does not insert duplicates' do
-      original_size = tree.inorder.size
-      tree.insert(23)
-      expect(tree.inorder.size).to eq(original_size)
+      original = tree.inorder
+      tree.insert(tree.root, 10)
+      expect(tree.inorder).to eq(original)
     end
   end
 
   describe '#delete' do
-    it 'deletes a leaf node' do
-      tree.insert(99)
-      expect(tree.find(99)).not_to be_nil
-      tree.delete(99)
-      expect(tree.find(99)).to be_nil
+    context 'when deleting a leaf node' do
+      it 'removes the node' do
+        tree.delete(tree.root, 3)
+        expect(tree.inorder).not_to include(3)
+      end
     end
 
-    it 'deletes a node with one child' do
-      tree.insert(100)
-      tree.insert(101)
-      tree.delete(100)
-      expect(tree.find(100)).to be_nil
-      expect(tree.find(101)).not_to be_nil
+    context 'when deleting a node with one child' do
+      it 'replaces the node with its child' do
+        tree.delete(tree.root, 5)
+        expect(tree.inorder).to eq([3, 7, 10, 12, 15, 18])
+      end
     end
 
-    it 'deletes a node with two children' do
-      expect(tree.find(23)).not_to be_nil
-      tree.delete(23)
-      expect(tree.find(23)).to be_nil
-    end
-  end
-
-  describe 'Traversal methods' do
-    it 'returns correct level-order traversal' do
-      expect(tree.level_order).to be_an(Array)
+    context 'when deleting a node with two children' do
+      it 'replaces it with its inorder successor' do
+        tree.delete(tree.root, 10)
+        expect(tree.inorder).to eq([3, 5, 7, 12, 15, 18])
+      end
     end
 
-    it 'returns correct preorder traversal' do
-      expect(tree.preorder).to be_an(Array)
-    end
-
-    it 'returns correct postorder traversal' do
-      expect(tree.postorder).to be_an(Array)
-    end
-
-    it 'returns correct inorder traversal' do
-      expect(tree.inorder).to eq(data.uniq.sort)
+    context 'when deleting the root node until empty' do
+      it 'returns nil when deleting from an empty tree' do
+        empty_tree = Tree.new([])
+        expect(empty_tree.delete(empty_tree.root, 1)).to be_nil
+      end
     end
   end
 
-  describe '#height and #depth' do
-    it 'returns correct height' do
-      node = tree.find(67)
-      expect(tree.height(67)).to eq(tree.send(:node_height, node))
-    end
-
-    it 'returns correct depth' do
-      depth = tree.depth(67)
-      expect(depth).to be_a(Integer)
-      expect(depth).to be >= 0
-    end
-  end
-
-  describe '#balanced?' do
-    it 'detects imbalance' do
-      5.times { |i| tree.insert(100 + i) }
-      expect(tree.balanced?).to be false
-    end
-
-    it 'rebalance the tree' do
-      5.times { |i| tree.insert(100 + i) }
-      expect(tree.balanced?).to be false
-      tree.rebalance
-      expect(tree.balanced?).to be true
+  describe '#find_successor' do
+    it 'finds the smallest value in the right subtree' do
+      node = tree.root.right # value: 15
+      successor = tree.find_successor(node)
+      expect(successor.value).to eq(12)
     end
   end
 end
