@@ -2,10 +2,10 @@ require 'rspec/core/formatters/base_formatter'
 
 class MinimalFormatter < RSpec::Core::Formatters::BaseFormatter
   RSpec::Core::Formatters.register self,
-    :example_group_started,
-    :example_passed,
-    :example_failed,
-    :dump_summary
+                                   :example_group_started,
+                                   :example_passed,
+                                   :example_failed,
+                                   :dump_summary
 
   GREEN = "\e[32m"
   RED   = "\e[31m"
@@ -13,20 +13,17 @@ class MinimalFormatter < RSpec::Core::Formatters::BaseFormatter
 
   def initialize(output)
     super
-    @current_group = nil
     @results = Hash.new { |h, k| h[k] = { passed: [], failed: [] } }
   end
 
-  def example_group_started(notification)
-    @current_group = notification.group.description.strip
-  end
-
   def example_passed(notification)
-    @results[@current_group][:passed] << notification.example.description.strip
+    group_key = full_group_description(notification.example)
+    @results[group_key][:passed] << notification.example.description.strip
   end
 
   def example_failed(notification)
-    @results[@current_group][:failed] << notification.example.description.strip
+    group_key = full_group_description(notification.example)
+    @results[group_key][:failed] << notification.example.description.strip
   end
 
   def dump_summary(summary)
@@ -50,5 +47,15 @@ class MinimalFormatter < RSpec::Core::Formatters::BaseFormatter
     output.puts "#{GREEN}Passed: #{passed}#{RESET}"
     output.puts "#{RED}Failed: #{failed}#{RESET}"
     output.puts "Total:  #{total}"
+  end
+
+  private
+
+  def full_group_description(example)
+    example.example_group.parent_groups
+           .reverse
+           .map(&:description)
+           .reject(&:empty?)
+           .join(' > ')
   end
 end

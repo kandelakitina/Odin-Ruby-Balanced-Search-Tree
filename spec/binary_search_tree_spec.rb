@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../lib/binary_search_tree.rb'
+require_relative '../lib/binary_search_tree'
 
 RSpec.describe Tree do
   let(:array) { [10, 5, 15, 3, 7, 12, 18] }
@@ -10,12 +10,6 @@ RSpec.describe Tree do
     it 'builds a tree with the root value from the first element inserted' do
       expect(tree.root).to be_a(TreeNode)
       expect(tree.root.value).to eq(10)
-    end
-  end
-
-  describe '#inorder' do
-    it 'returns the elements in sorted order' do
-      expect(tree.inorder).to eq([3, 5, 7, 10, 12, 15, 18])
     end
   end
 
@@ -62,11 +56,40 @@ RSpec.describe Tree do
     end
   end
 
-  describe '#find_successor' do
-    it 'finds the smallest value in the right subtree' do
-      node = tree.root.right # value: 15
-      successor = tree.find_successor(node)
-      expect(successor.value).to eq(12)
+  describe '#find' do
+    context 'when the target exists in the tree' do
+      it 'returns the node with the target value' do
+        node = tree.find(tree.root, 7)
+        expect(node).to be_a(TreeNode)
+        expect(node.value).to eq(7)
+      end
+    end
+
+    context 'when the target does not exist in the tree' do
+      it 'returns nil' do
+        result = tree.find(tree.root, 99)
+        expect(result).to be_nil
+      end
+    end
+
+    context 'when the tree is empty' do
+      it 'returns nil' do
+        empty_tree = Tree.new([])
+        expect(empty_tree.find(empty_tree.root, 10)).to be_nil
+      end
+    end
+
+    context 'when the target is at the root' do
+      it 'returns the root node' do
+        node = tree.find(tree.root, 10)
+        expect(node).to eq(tree.root)
+      end
+    end
+  end
+
+  describe '#inorder' do
+    it 'returns the elements in sorted order' do
+      expect(tree.inorder).to eq([3, 5, 7, 10, 12, 15, 18])
     end
   end
 end
