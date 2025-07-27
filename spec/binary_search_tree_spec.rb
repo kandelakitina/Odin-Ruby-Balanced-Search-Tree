@@ -122,4 +122,23 @@ RSpec.describe Tree do
       end
     end
   end
+
+  describe '#height' do
+    it 'returns the correct height of the tree' do
+      expect(tree.height).to eq(2)
+    end
+
+    it 'returns -1 for an empty tree' do
+      empty_tree = Tree.allocate
+      empty_tree.instance_variable_set(:@root, nil)
+      expect(empty_tree.height).to eq(-1)
+    end
+
+    it 'returns 0 for a tree with only root node' do
+      single_node_tree = Tree.allocate
+      single_node = TreeNode.new(42)
+      single_node_tree.instance_variable_set(:@root, single_node)
+      expect(single_node_tree.height).to eq(0)
+    end
+  end
 end
