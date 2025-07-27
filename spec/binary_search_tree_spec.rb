@@ -141,4 +141,25 @@ RSpec.describe Tree do
       expect(single_node_tree.height).to eq(0)
     end
   end
+
+  describe '#depth' do
+    it 'returns 0 for the root node' do
+      expect(tree.depth(tree.root)).to eq(0)
+    end
+
+    it 'returns correct depth for a left child' do
+      left_child = tree.root.left # node with value 5
+      expect(tree.depth(left_child)).to eq(1)
+    end
+
+    it 'returns correct depth for a right-right grandchild' do
+      right_right = tree.root.right.right # node with value 18
+      expect(tree.depth(right_right)).to eq(2)
+    end
+
+    it 'returns -1 for a node not in the tree' do
+      orphan = TreeNode.new(999)
+      expect(tree.depth(orphan)).to eq(-1)
+    end
+  end
 end

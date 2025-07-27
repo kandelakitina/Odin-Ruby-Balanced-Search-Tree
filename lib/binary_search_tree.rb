@@ -97,6 +97,16 @@ class Tree
     [left, right].max + 1
   end
 
+  def depth(target, current = @root, current_depth = 0)
+    return -1 if current.nil?
+    return current_depth if current == target
+
+    left = depth(target, current.left, current_depth + 1)
+    return left unless left == -1
+
+    depth(target, current.right, current_depth + 1)
+  end
+
   def pretty_print(node: @root, prefix: '', is_left: true)
     return if node.nil?
 
