@@ -9,13 +9,17 @@ class Tree
     @root = build_tree(array.uniq.sort)
   end
 
-  def insert(value, node = @root)
+  def insert(value)
+    @root = insert_recursive(@root, value)
+  end
+
+  def insert_recursive(node, value)
     return TreeNode.new(value) if node.nil?
 
     if value < node.value
-      node.left = insert(value, node.left)
+      node.left = insert_recursive(node.left, value)
     elsif value > node.value
-      node.right = insert(value, node.right)
+      node.right = insert_recursive(node.right, value)
     end
     node
   end
