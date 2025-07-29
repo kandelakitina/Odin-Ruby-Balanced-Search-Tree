@@ -24,13 +24,21 @@ class Tree
     node
   end
 
-  def delete(node, target)
+  def delete(target, node = @root)
+    if node == @root
+      @root = delete_recursive(target, node)
+    else
+      delete_recursive(target, node)
+    end
+  end
+
+  def delete_recursive(target, node)
     return nil if node.nil?
 
     if target < node.value
-      node.left = delete(node.left, target)
+      node.left = delete_recursive(target, node.left)
     elsif target > node.value
-      node.right = delete(node.right, target)
+      node.right = delete_recursive(target, node.right)
     else
       node = delete_node(node)
     end
