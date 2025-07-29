@@ -156,19 +156,14 @@ class Tree
   end
 
   def delete_node(node)
-    return nil if leaf?(node)
     return node.right if node.left.nil?
     return node.left if node.right.nil?
 
-    # Node has two children
+    # Node with two children
     successor = find_successor(node.right)
     node.value = successor.value
-    node.right = delete(node.right, successor.value)
+    node.right = delete(successor.value, node.right)
     node
-  end
-
-  def leaf?(node)
-    node.left.nil? && node.right.nil?
   end
 
   def find_successor(node)
