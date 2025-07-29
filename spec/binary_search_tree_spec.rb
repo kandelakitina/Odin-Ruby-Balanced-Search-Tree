@@ -202,4 +202,14 @@ RSpec.describe Tree do
       end
     end
   end
+
+  describe '#clear' do
+    it 'removes all nodes from the tree' do
+      tree.clear
+      expect(tree.root).to be_nil
+      expect(tree.inorder).to eq([])
+      expect(tree.height).to eq(-1)
+      expect(tree.balanced?).to be true
+    end
+  end
 end

@@ -126,8 +126,6 @@ class Tree
     pretty_print(node: node.left, prefix: "#{prefix}#{is_left ? '    ' : '│   '}", is_left: true)
   end
 
-  private
-
   def build_tree(array)
     return nil if array.empty?
 
@@ -158,5 +156,9 @@ class Tree
     return node if node.left.nil?
 
     find_successor(node.left)
+  end
+
+  def clear
+    @root = nil
   end
 end
