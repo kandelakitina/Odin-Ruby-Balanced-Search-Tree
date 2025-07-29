@@ -29,21 +29,23 @@ RSpec.describe Tree do
   describe '#delete' do
     context 'when deleting a leaf node' do
       it 'removes the node' do
-        tree.delete(tree.root, 3)
-        expect(tree.inorder).not_to include(3)
+        tree.delete(3)
+        expect(tree.inorder).to eq([5, 7, 10, 12, 15, 18])
       end
     end
 
     context 'when deleting a node with one child' do
       it 'replaces the node with its child' do
-        tree.delete(tree.root, 5)
-        expect(tree.inorder).to eq([3, 7, 10, 12, 15, 18])
+        # Remove a node that ends up having one child
+        tree.delete(3) # first delete leaf
+        tree.delete(5) # now 5 has only one child: 7
+        expect(tree.inorder).to eq([7, 10, 12, 15, 18])
       end
     end
 
     context 'when deleting a node with two children' do
       it 'replaces it with its inorder successor' do
-        tree.delete(tree.root, 10)
+        tree.delete(10) # 10 has two children (5 and 15)
         expect(tree.inorder).to eq([3, 5, 7, 12, 15, 18])
       end
     end
@@ -51,7 +53,7 @@ RSpec.describe Tree do
     context 'when deleting the root node until empty' do
       it 'returns nil when deleting from an empty tree' do
         empty_tree = Tree.new([])
-        expect(empty_tree.delete(empty_tree.root, 1)).to be_nil
+        expect(empty_tree.delete(1)).to be_nil
       end
     end
   end
@@ -59,7 +61,7 @@ RSpec.describe Tree do
   describe '#find' do
     context 'when the target exists in the tree' do
       it 'returns the node with the target value' do
-        node = tree.find(tree.root, 7)
+        node = tree.find(7)
         expect(node).to be_a(TreeNode)
         expect(node.value).to eq(7)
       end
@@ -67,7 +69,7 @@ RSpec.describe Tree do
 
     context 'when the target does not exist in the tree' do
       it 'returns nil' do
-        result = tree.find(tree.root, 99)
+        result = tree.find(99)
         expect(result).to be_nil
       end
     end
@@ -75,13 +77,13 @@ RSpec.describe Tree do
     context 'when the tree is empty' do
       it 'returns nil' do
         empty_tree = Tree.new([])
-        expect(empty_tree.find(empty_tree.root, 10)).to be_nil
+        expect(empty_tree.find(10)).to be_nil
       end
     end
 
     context 'when the target is at the root' do
       it 'returns the root node' do
-        node = tree.find(tree.root, 10)
+        node = tree.find(10)
         expect(node).to eq(tree.root)
       end
     end
