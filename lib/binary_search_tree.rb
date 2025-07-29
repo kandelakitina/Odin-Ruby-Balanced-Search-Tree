@@ -5,7 +5,7 @@ require_relative 'treenode'
 class Tree
   attr_accessor :root
 
-  def initialize(array)
+  def initialize(array = [])
     @root = build_tree(array.uniq.sort)
   end
 
