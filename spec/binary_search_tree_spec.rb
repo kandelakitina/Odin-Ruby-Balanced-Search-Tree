@@ -203,13 +203,23 @@ RSpec.describe Tree do
     end
   end
 
-  describe '#clear' do
-    it 'removes all nodes from the tree' do
-      tree.clear
-      expect(tree.root).to be_nil
-      expect(tree.inorder).to eq([])
-      expect(tree.height).to eq(-1)
-      expect(tree.balanced?).to be true
+  describe '#rebalance' do
+    it 'rebalances an unbalanced tree' do
+      # Create a highly unbalanced tree by inserting increasing values
+      unbalanced_tree = Tree.new
+      [10, 20, 30, 40, 50].each { |value| unbalanced_tree.insert(value) }
+
+      # Sanity check before rebalancing
+      expect(unbalanced_tree.balanced?).to be false
+
+      # Perform rebalancing
+      unbalanced_tree.rebalance
+
+      # After rebalancing, tree should be balanced
+      expect(unbalanced_tree.balanced?).to be true
+
+      # The tree should still contain all original values
+      expect(unbalanced_tree.inorder).to eq([10, 20, 30, 40, 50])
     end
   end
 end
