@@ -122,6 +122,13 @@ class Tree
     balanced?(node.left) && balanced?(node.right)
   end
 
+  def rebalance
+    return if @root.nil?
+
+    values = inorder.uniq
+    @root = build_tree(values)
+  end
+
   def pretty_print(node: @root, prefix: '', is_left: true)
     return if node.nil?
 
@@ -160,9 +167,5 @@ class Tree
     return node if node.left.nil?
 
     find_successor(node.left)
-  end
-
-  def clear
-    @root = nil
   end
 end
