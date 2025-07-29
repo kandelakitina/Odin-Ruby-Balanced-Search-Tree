@@ -46,14 +46,14 @@ class Tree
     node
   end
 
-  def find(node, target)
+  def find(target, node = @root)
     return nil if node.nil?
     return node if node.value == target
 
     if target < node.value
-      find(node.left, target)
+      find(target, node.left)
     else
-      find(node.right, target)
+      find(target, node.right)
     end
   end
 
