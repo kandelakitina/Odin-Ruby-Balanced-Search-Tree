@@ -15,13 +15,13 @@ RSpec.describe Tree do
 
   describe '#insert' do
     it 'inserts a new node into the tree' do
-      tree.insert(tree.root, 6)
+      tree.insert(6)
       expect(tree.inorder).to include(6)
     end
 
     it 'does not insert duplicates' do
-      original = tree.inorder
-      tree.insert(tree.root, 10)
+      original = tree.inorder.dup
+      tree.insert(10)
       expect(tree.inorder).to eq(original)
     end
   end
@@ -160,6 +160,46 @@ RSpec.describe Tree do
     it 'returns -1 for a node not in the tree' do
       orphan = TreeNode.new(999)
       expect(tree.depth(orphan)).to eq(-1)
+    end
+  end
+
+  describe '#balanced?' do
+    context 'when the tree is perfectly balanced' do
+      it 'returns true' do
+        expect(tree.balanced?).to eq(true)
+      end
+    end
+
+    context 'when the tree is unbalanced due to deeper right subtree' do
+      it 'returns false' do
+        tree.insert(20)
+        tree.insert(25)
+        expect(tree.balanced?).to eq(false)
+      end
+    end
+
+    context 'when the tree is unbalanced due to deeper left subtree' do
+      it 'returns false' do
+        unbalanced_tree = Tree.new([10, 5, 15])
+        unbalanced_tree.insert(2)
+        unbalanced_tree.insert(1)
+        expect(unbalanced_tree.balanced?).to eq(false)
+      end
+    end
+
+    context 'when the tree is empty' do
+      it 'returns true' do
+        empty_tree = Tree.allocate
+        empty_tree.instance_variable_set(:@root, nil)
+        expect(empty_tree.balanced?).to eq(true)
+      end
+    end
+
+    context 'when the tree has only one node' do
+      it 'returns true' do
+        single_node_tree = Tree.new([42])
+        expect(single_node_tree.balanced?).to eq(true)
+      end
     end
   end
 end

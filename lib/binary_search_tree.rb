@@ -9,13 +9,13 @@ class Tree
     @root = build_tree(array.uniq.sort)
   end
 
-  def insert(node, value)
+  def insert(value, node = @root)
     return TreeNode.new(value) if node.nil?
 
     if value < node.value
-      node.left = insert(node.left, value)
+      node.left = insert(value, node.left)
     elsif value > node.value
-      node.right = insert(node.right, value)
+      node.right = insert(value, node.right)
     end
     node
   end
@@ -105,6 +105,17 @@ class Tree
     return left unless left == -1
 
     depth(target, current.right, current_depth + 1)
+  end
+
+  def balanced?(node = @root)
+    return true if node.nil?
+
+    left_height = height(node.left)
+    right_height = height(node.right)
+
+    return false if (left_height - right_height).abs > 1
+
+    balanced?(node.left) && balanced?(node.right)
   end
 
   def pretty_print(node: @root, prefix: '', is_left: true)
